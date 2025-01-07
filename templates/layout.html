@@ -7,27 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>E-Ticaret | {% block page_title %}{% endblock page_title %}</title>
+    <link rel="stylesheet" href="css/layout.css" class="">
 </head>
 
 <body>
     <header>
-        <!-- Üst Header (Kullanıcı Giriş/Çıkış ve İletişim gibi öğeler) -->
-        <div class="bg-light py-2">
-            <div class="container d-flex justify-content-between">
-                <!-- Kullanıcı Seçenekleri -->
-                <div class="user-options">
-                    <a href="/login" class="me-3">Login</a>
-                    <a href="/register">Sign Up</a>
-                </div>
-            </div>
+        <div class=" container bg-light py-2">
+            <p class="text-primary fw-bold mb-0 ms-3">Sipariş üzerine yapılır</p>
         </div>
-
         <!-- Orta Header (Navigasyon ve Sepete Ekle Butonu) -->
-        <div class="bg-secondary shadow-sm">
+        <div class="container shadow-sm" style="background-color: #bb835e;">
             <div class="container py-3">
                 <!-- Navigasyon Menüsü (Mobil uyumlu) -->
-                <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="/"><img src="{% static 'images/logo.png' %}" alt="Logo" style="width: 100px; height: auto;" /></a>
+                <nav class="navbar navbar-expand-lg navbar-light" >
+                    <a class="navbar-brand" href="/"><img src="{% static 'images/slider1.jpg' %}" alt="Logo" style="width: 100px; height: auto; " /></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -51,40 +44,9 @@
             </div>
         </div>
 
-        <!-- Slider -->
-        <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="{% static 'images/slider6.jpg' %}" class="d-block w-100" alt="First Slide" style="height: 600px; object-fit: cover;">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>First Slide</h5>
-                        <p>This is the first slide of the carousel.</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="{% static 'images/slider4.jpg' %}" class="d-block w-100" alt="Second Slide" style="height: 600px; object-fit: cover;">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>Second Slide</h5>
-                        <p>This is the second slide of the carousel.</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="{% static 'images/slider5.jpg' %}" class="d-block w-100" alt="Third Slide" style="height: 600px; object-fit: cover;">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>Third Slide</h5>
-                        <p>This is the third slide of the carousel.</p>
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
+        {% block slider %}{% endblock  %}
+        {% block contact %}{% endblock  %}
+
     </header>
 
     <!-- Bootstrap JS, Popper.js ve gerekli diğer dosyalar -->
