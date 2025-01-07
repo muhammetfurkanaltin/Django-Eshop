@@ -1,7 +1,9 @@
 from django.urls import path
 from .import views
 
+
 urlpatterns = [
-   path('reel',views.reel),
+   path('',views.home),
+   path('real',views.real),
    path('fake',views.fake),
 ]

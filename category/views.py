@@ -1,7 +1,10 @@
 from django.shortcuts import render
 
-def reel (request):
-    return render (request,'pages/reel.html')
+def home (request):
+    return render (request,'home/home.html')
+ 
+def real (request):
+    return render (request,'pages/real.html')
  
 def fake (request):
     return render (request,'pages/fake.html')
