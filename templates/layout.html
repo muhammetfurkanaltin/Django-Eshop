@@ -1,57 +1,33 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>E-Ticaret | {% block page_title %}{% endblock page_title %}</title>
-    <link rel="stylesheet" href="css/layout.css" class="">
+    <link rel="icon" href="{% static 'images/foxL.png' %}" type="image/png">
+    
+    <!-- CSS -->
+    {% include 'partials/_styles.html' %}
 </head>
 
 <body>
-    <header>
-        <div class=" container bg-light py-2">
-            <p class="text-primary fw-bold mb-0 ms-3">Sipariş üzerine yapılır</p>
-        </div>
-        <!-- Orta Header (Navigasyon ve Sepete Ekle Butonu) -->
-        <div class="container shadow-sm" style="background-color: #bb835e;">
-            <div class="container py-3">
-                <!-- Navigasyon Menüsü (Mobil uyumlu) -->
-                <nav class="navbar navbar-expand-lg navbar-light" >
-                    <a class="navbar-brand" href="/"><img src="{% static 'images/slider1.jpg' %}" alt="Logo" style="width: 100px; height: auto; " /></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav flex-column flex-lg-row"> <!-- Flex düzenini yatayda hizalamak için flex-lg-row ekledik -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="/">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/shop">Shop</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/about">About Us</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/contact">Contact</a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-        </div>
 
-        {% block slider %}{% endblock  %}
-        {% block contact %}{% endblock  %}
+    <!-- HEADER -->
+    <header>
+        {% include 'partials/_header.html' %}
 
     </header>
+
+    {% block slider %}{% endblock %}
+    {% block contact %}{% endblock %}
 
     <!-- Bootstrap JS, Popper.js ve gerekli diğer dosyalar -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    
 </body>
 
 </html>
