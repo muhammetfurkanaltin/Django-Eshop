@@ -75,13 +75,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': os.getenv('DB_NAME'),
-        'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': os.getenv('DB_HOST'),
+            'host': os.getenv('MONGODB_URL'),
+            'ssl': True,
+            'tlsAllowInvalidCertificates': True,
         }
     }
 }
-connect(host=os.getenv('MONGODB_URL'))
 
 
 # Password validation
