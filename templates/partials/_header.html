@@ -1,55 +1,62 @@
 {% load static %}
-<!-- Üst Header Bilgisi -->
-<div class="top-header text-center">
-    <p>Sipariş üzerine yapılır</p>
-</div>
-
-<!-- Orta Header (Navigasyon ve Logo) -->
-<div class="main-header">
-    <div class="container ">
-        <div class="row">
-            <div class="col-md-12">
-                <nav class="navbar navbar-expand-lg navbar-dark">
-                    <a class="navbar-brand" href="/"><img src="{% static 'images/foxL.png' %}" alt="Logo"></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav me-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/">Home</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Category
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
-                                    <li><a class="dropdown-item" href="/category/fake">Fake</a></li>
-                                    <li><a class="dropdown-item" href="/category/real">Real</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/about">About Us</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/contact">Contact</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/cart"><i class="fa-solid fa-shopping-cart"></i></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/login"><i class="fa-regular fa-user"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
+<!-- HEADER -->
+    <header>
+    <!-- Üst Header -->
+    <div class="py-2">
+        <div class="container">
+            <p class="text-center text-dark mb-0 fw-bold">Welcome to Our Store!</p>
         </div>
     </div>
-</div>
+
+    <!-- Ana Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #bb835e;">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'images/foxL.png' %}" alt="Logo" width="60" height="auto">
+            </a>
             
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Categories
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Real</a></li>
+                            <li><a class="dropdown-item" href="#">Fake</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                    </li>
+                </ul>
+                <!-- Sağ taraftaki ikonlar -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
                 
             
         
