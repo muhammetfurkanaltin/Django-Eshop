@@ -22,8 +22,8 @@ class Product(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     isStock = models.BooleanField(default=True)
-    slug = models.SlugField(unique=True, blank=True)  # Slug alanı eklendi
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
+    slug = models.SlugField(unique=True, blank=True)  
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1,related_name='products')
     created_at = models.DateTimeField(auto_now_add=True)
     
 

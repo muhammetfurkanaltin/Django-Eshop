@@ -29,8 +29,10 @@
                             Categories
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Real</a></li>
-                            <li><a class="dropdown-item" href="#">Fake</a></li>
+                            <li><a class="dropdown-item" href="{% url 'category' %}">All</a></li>
+                            {% for category in categories %}
+                                <li><a class="dropdown-item" href="{% url 'product_by_category' category.slug %}">{{ category.name|title }}</a></li>
+                            {% endfor %}
                         </ul>
                     </li>
                     <li class="nav-item">
