@@ -4,7 +4,7 @@
     Home
 {% endblock page_title %}
 
-{% block home %}
+{% block content %}
     <!-- Slider -->
     <div id="carouselExampleAutoplaying" class="container carousel slide mt-3" data-bs-ride="carousel">
         <div class="carousel-inner rounded-5">
@@ -41,43 +41,24 @@
     </div>
 
 <main>
-   <div class="container">
-        <h1 class="mt-3">Favorites</h1>
-        <div class="row mt-3">
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="Product 2">
-                    <div class="card-body">
-                        <h5 class="card-title">Product 2</h5>
-                        <p class="card-text">$149.99</p>
-                        <a href="#" class="btn btn-primary">Add to Cart</a>
+    <div class="container mt-3">
+        <h1>Favorites Jacket</h1>
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-3 mb-3">
+                <div class="card" style="border: 1px solid #ddd; border-radius: 5px;">
+                    <div class="card-body text-center">
+                        <img class="img-fluid" src="{% static 'images/'|add:product.imagUrl %}" alt="{{ product.title }}" style="width: 300px; height: 300px; object-fit: cover;">
+                        <h5 class="card-title">{{ product.title }}</h5>
+                        <p class="card-text">{{ product.description|truncatechars:20 }}</p>
+                        <p>{{ product.created_at|date:'d l' }}</p>
+                        <p class=" text-success"><a href="#" class="d-flex-between btn btn-secondary">Add to Cart</a>{{ product.isStock|yesno:"In Stock,Out of Stock" }}</p>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="Product 3">
-                    <div class="card-body">
-                        <h5 class="card-title">Product 3</h5>
-                        <p class="card-text">$199.99</p>
-                        <a href="#" class="btn btn-primary">Add to Cart</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="Product 4">
-                    <div class="card-body">
-                        <h5 class="card-title">Product 4</h5>
-                        <p class="card-text">$299.99</p>
-                        <a href="#" class="btn btn-primary">Add to Cart</a>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
-    </div> 
+    </div>
 </main>
 {% endblock %}
 

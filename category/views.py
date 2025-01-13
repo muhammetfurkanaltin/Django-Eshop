@@ -14,11 +14,15 @@ def details(request,slug):
     return render(request, 'pages/details.html',context)
 
 def getProductByCategory(request, category_slug):
-    category = get_object_or_404(Category, slug=category_slug)
-    products = Product.objects.filter(category=category)
-    context = {
-        'category': category,
-        'products': products
-    }
-    return render(request, 'pages/index.html', context)
+    if category_slug == 'real-fur':
+        category = Category.objects.get(slug='real-fur')
+        products = Product.objects.filter(category=category)
+        return render(request, 'pages/real.html', {'products': products})
+    elif category_slug == 'faux-fur':
+        category = Category.objects.get(slug='faux-fur')
+        products = Product.objects.filter(category=category)
+        return render(request, 'pages/faux.html', {'products': products})
+    else:
+        products = Product.objects.filter(isStock=True)
+    return render(request, 'pages/index.html', {'products': products})
     

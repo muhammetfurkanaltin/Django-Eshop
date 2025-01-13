@@ -12,14 +12,10 @@
     <link rel="icon" href="{% static 'images/ceketL.png' %}">
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100" style="background-color:#eaeaea ; ">
     {% include 'partials/_header.html' %}
     <!-- Home -->
-    {% block home %}{% endblock %}
-    <!-- Products -->
-    {% block products %}{% endblock %}
-    <!-- Contact -->
-    {% block contact %}{% endblock %}
+   
 
     {% block content %}{% endblock %}
 
