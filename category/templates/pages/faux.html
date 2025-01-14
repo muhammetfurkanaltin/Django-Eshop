@@ -16,7 +16,11 @@
                     <p class="card-text">{{ product.description|truncatechars:20 }}</p>
                     <p>{{ product.created_at|date:'d l' }}</p>
                     <p class="text-light">
+                        {% if product.isStock %}
                         <span class="badge" style="background-color: #28a745; color: white;">{{ product.isStock|yesno:"In Stock,Out of Stock" }}</span>
+                        {% else %}
+                        <span class="badge" style="background-color: #dc3545; color: white;">{{ product.isStock|yesno:"In Stock,Out of Stock" }}</span>
+                        {% endif %}
                         <a href="#" class="d-flex-between btn btn-primary" style="margin-left: 10px;">Add to Cart</a>
                     </p>
                 </div>

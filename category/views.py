@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404, render
 from .models import Category, Product
 
 def index(request):
-    product = Product.objects.filter(isStock=True)
     categories = Category.objects.all()
+    product = Product.objects.filter(isStock=True)
     return render(request, 'pages/index.html', {'product': product, 'category': categories})
 
 def details(request,slug):
@@ -23,6 +23,8 @@ def getProductByCategory(request, category_slug):
         products = Product.objects.filter(category=category)
         return render(request, 'pages/faux.html', {'products': products})
     else:
-        products = Product.objects.filter(isStock=True)
+        products = Product.objects.all()
     return render(request, 'pages/index.html', {'products': products})
+
+
     
