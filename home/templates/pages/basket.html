@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block page_title %}
+    Basket
+{% endblock page_title %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Alışveriş Sepetiniz</h1>
+    {% if basket_items %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Ürün Resmi</th>
+                        <th>Ürün</th>
+                        <th>Adet</th>
+                        <th>Fiyat</th>
+                        <th>Toplam</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in basket_items %}
+                    <tr>
+                        <td>
+                            <img src="{{ item.products.image.url }}" alt="{{ item.products.title }}" style="max-width: 100px;">
+                        </td>
+                        <td>{{ item.products.title }}</td>
+                        <td>
+                            <form class="d-flex align-items-center" method="POST" action="{% url 'update_basket' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ item.products.id }}">
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control" style="width: 70px;">
+                                <button type="submit" class="btn btn-sm btn-primary ms-2">Güncelle</button>
+                            </form>
+                        </td>
+                        <td>{{ item.products.price|floatformat:2 }} TL</td>
+                        <td>{{ item.total_price|floatformat:2 }} TL</td>
+                        <td>
+                            <form method="POST" action="{% url 'remove_from_basket' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ item.products.id }}">
+                                <button type="submit" class="btn btn-sm btn-danger">Kaldır</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="4" class="text-end"><strong>Toplam Tutar:</strong></td>
+                        <td colspan="2"><strong>{{ total_price|floatformat:2 }} TL</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-end mt-3">
+            <a href="{% url 'home' %}" class="btn btn-secondary me-2">Alışverişe Devam Et</a>
+            <a href="{% url 'checkout' %}" class="btn btn-success">Ödeme Sayfasına Git</a>
+        </div>
+    {% else %}
+        <div class="text-center">
+            <p class="mb-4">Sepetiniz boş.</p>
+            <a href="{% url 'home' %}" class="btn btn-primary">Alışverişe Başla</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

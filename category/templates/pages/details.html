@@ -8,17 +8,82 @@
 {% block content %}
 <div class="container mt-3">
     <div class="row">
+        <!-- Küçük Resimler -->
         <div class="col-1 mb-3">
-            <img  class="img-fluid rounded-start" src="{% static 'images/'|add:product.imagUrl %}" alt="{{ product.title }}" style="width: 100px; height: 100px; object-fit: cover;">
+            <img class="img-fluid rounded-start small-image" 
+                 src="{% static 'images/'|add:product.imagUrl %}" 
+                 alt="{{ product.title }}" 
+                 style="width: 100px; height: 100px; object-fit: cover; margin-bottom: 10px;" 
+                 onclick="changeMainImage(this)">
+            <img class="img-fluid rounded-start small-image" 
+                 src="{% static 'images/2.jpg'%}" 
+                 alt="{{ product.title }}" 
+                 style="width: 100px; height: 100px; object-fit: cover; margin-bottom: 10px;" 
+                 onclick="changeMainImage(this)">
+            <img class="img-fluid rounded-start small-image" 
+                 src="{% static 'images/3.jpg' %}" 
+                 alt="{{ product.title }}" 
+                 style="width: 100px; height: 100px; object-fit: cover;" 
+                 onclick="changeMainImage(this)">
         </div>
+        
+        <!-- Büyük Resim -->
         <div class="col-5 mb-3">
-            <img  class="img-fluid rounded-start" src="{% static 'images/'|add:product.imagUrl %}" alt="{{ product.title }}">
+            <img class="img-fluid rounded-start" 
+                 id="main-image" 
+                 src="{% static 'images/'|add:product.imagUrl %}" 
+                 alt="{{ product.title }}">
         </div>
-        <div class="col-5 mb-3">
-            <h1 class="h3">{{product.title}}</h1>
-            <p>{{product.description}}</p>
-        </div>
+        
+        <!-- Ürün Bilgileri -->
+        <div class="col-12 col-sm-4 mb-3">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body d-flex flex-column text-center">
+                    <!-- Ürün Başlığı -->
+                    <h1 class="h3 card-title">{{ product.title }}</h1>
+                    
+                    <!-- Ürün Açıklaması -->
+                    <p class="card-text">{{ product.description }}</p>
+                    
+                    <!-- Fiyat -->
+                    <p class="text-muted">
+                        <strong>Price: </strong><span class="badge bg-warning text-dark">${{ product.price }}</span>
+                    </p>
+        
+                    <!-- Size Seçeneği -->
+                    <div class="mt-3">
+                        <label for="size-select" class="form-label">Size</label>
+                        <select id="size-select" class="form-select">
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                    </div>
+        
+                    <!-- Add to Cart ve Buy Now Butonları -->
+                    <div class="mt-4">
+                        <button class="btn btn-primary w-100 rounded-pill">ADD TO CART</button>
+                    </div>
+                    <div class="mt-2">
+                        <button class="btn btn-success w-100 rounded-pill">BUY IT NOW</button>
+                    </div>
+                </div>
+            </div>
+        </div>        
     </div>
 </div>
+
+<script>
+    function changeMainImage(clickedImage) {
+        // Büyük resim alanını bul
+        var mainImage = document.getElementById('main-image');
+        
+        // Küçük resmin 'src' değerini büyük resim ile değiştir
+        mainImage.src = clickedImage.src;
+    }
+</script>
+
 {% endblock content %}
 
