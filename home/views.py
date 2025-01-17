@@ -13,6 +13,9 @@ def about (request):
 def contact (request):
     return render (request,'pages/contact.html')
 
+def user_login(request):
+    return render(request,'pages/login.html')
+
 def basket(request):
     return render(request,'pages/basket.html')
 
