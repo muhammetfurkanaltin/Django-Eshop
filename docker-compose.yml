@@ -4,7 +4,9 @@ services:
   web:
     build: .
     ports:
-      - "8001:8000"  # 8000 konteynerden 8000 host'a yönlendirilir
+      - "8001:8000"  
+    volumes:
+      - .:/djangoEshop    
     environment:
       - DEBUG=True
       - ALLOWED_HOSTS=localhost,127.0.0.1
