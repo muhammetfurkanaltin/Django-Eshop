@@ -20,7 +20,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE,null=True,related_name='products')
     title = models.CharField(max_length=200)
     description = models.TextField()
-    price = models.FloatField(blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     isStock = models.BooleanField(default=True)
     isFav = models.BooleanField(default=False)
     imagUrl = models.CharField(null=True,max_length=50, blank=False)

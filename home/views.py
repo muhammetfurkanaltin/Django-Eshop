@@ -14,36 +14,60 @@ def about (request):
 
 def contact (request):
     return render (request,'pages/contact.html')
-
-def user_login(request):
-    return render(request,'pages/login.html')
-
-def view_basket(request,product_id):
-    product = get_object_or_404(Product, id=product_id)
-    return render(request, 'pages/basket.html', {'product': product})
+    
 
 def add_to_cart(request, product_id):
-    # Sepeti oturumdan al
+    product = get_object_or_404(Product, id=product_id)
+    
+    # Sepet mevcut mu? Eğer yoksa, boş bir sepet oluştur.
     cart = request.session.get('cart', {})
     
-    # Eğer ürün sepette varsa miktarını artır
-    if product_id in cart:
-        cart[product_id] += 1
-    else:
-        cart[product_id] = 1  # Ürünü ilk kez ekliyoruz.
-    
-    # Sepeti oturuma geri kaydet
-    request.session['cart'] = cart
-    request.session.modified = True  # Oturumu günceller
+    product_price = float(product.price)
 
-    return JsonResponse({'success': True, 'cart': cart})
+    # Eğer ürün zaten sepette varsa, miktarını artır.
+    if str(product_id) in cart:
+        cart[str(product_id)]['quantity'] += 1
+    else:
+        # Ürün bilgilerini sepete eklerken price ve quantity'yi de eklediğimize emin olalım
+        cart[str(product_id)] = {'title': product.title, 'price': product_price, 'quantity': 1 , 'imagUrl' : product.imagUrl }
+
+    # Sepeti session'a kaydet
+    request.session['cart'] = cart
+
+    # Sepet sayfasına yönlendir
+    return redirect('cart')  # Sepet sayfanıza yönlendirin.
+
+def clear_cart(request):
+    # Remove specific session keys
+    if 'cart' in request.session:
+        del request.session['cart']
+    # Force session to be saved
+    request.session.modified = True
+    return redirect('cart')
 
 def view_cart(request):
     cart = request.session.get('cart', {})
-    # Ürünleri database'den almak için
-    products = Product.objects.filter(id__in=cart.keys())
-    cart_items = [
-        {'product': product, 'quantity': cart[str(product.id)]} 
-        for product in products
-    ]
-    return render(request, 'cart.html', {'cart_items': cart_items})
+    total_price = sum(item['price'] * item['quantity'] for item in cart.values())  # Toplam fiyat hesaplama
+    return render(request, 'pages/cart.html', {'cart': cart, 'total_price': total_price})
+
+def update_quantity(request, product_id):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        cart = request.session.get('cart', {})
+
+        if str(product_id) in cart:
+            if action == 'increase':
+                cart[str(product_id)]['quantity'] += 1
+            elif action == 'decrease' and cart[str(product_id)]['quantity'] > 1:
+                cart[str(product_id)]['quantity'] -= 1
+            elif action == 'decrease' and cart[str(product_id)]['quantity'] == 1:
+                del cart[str(product_id)]
+
+        request.session['cart'] = cart
+        request.session.modified = True
+
+    return redirect('cart')
+
+
+
+

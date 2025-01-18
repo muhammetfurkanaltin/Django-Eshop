@@ -64,7 +64,10 @@
         
                     <!-- Add to Cart ve Buy Now Butonları -->
                     <div class="mt-4">
-                        <button class="add-to-cart-btn" data-product-id="{{ product.id }}">Add to Cart</button>
+                        <form action="{% url 'add_to_cart' product.id %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-primary w-100 rounded-pill "type="submit">Add to Cart</button>
+                        </form>
                     </div>
                     <div class="mt-2">
                         <button class="btn btn-success w-100 rounded-pill">BUY IT NOW</button>
@@ -83,28 +86,6 @@
         // Küçük resmin 'src' değerini büyük resim ile değiştir
         mainImage.src = clickedImage.src;
     }
-</script>
-<script>
-    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const productId = this.getAttribute('data-product-id');
-            
-            fetch(`/add-to-cart/${productId}/`, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Product added to cart!');
-                } else {
-                    alert('Failed to add product.');
-                }
-            });
-        });
-    });
 </script>
 {% endblock content %}
 
