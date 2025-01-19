@@ -5,6 +5,16 @@
 {% endblock page_title %}
 {% block content %}
 <div class="container mt-5">
+        <!-- Mesajlar -->
+    {% if messages %}
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {% for message in messages %}
+                <p class="mb-0">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <!-- Başlık -->
     <div class="mb-4">
         <h1 class="text-center fw-bold display-4">Products</h1>
@@ -32,13 +42,14 @@
                     <div class="mt-auto">
                         {% if product.isStock %}
                         <span class="badge bg-success">In Stock</span>
-                        {% else %}
-                        <span class="badge bg-danger">Out of Stock</span>
-                        {% endif %}
                         <form action="{% url 'add_to_cart' product.id %}" method="post">
                             {% csrf_token %}
-                            <button class=" btn btn-primary btn-sm mt-2 w-100 " type="submit"> Add to Cart </button>
+                            <button class="btn btn-primary btn-sm mt-2 w-100" type="submit">Add to Cart</button>
                         </form>
+                        {% else %}
+                        <span class="badge bg-danger">Out of Stock</span>
+                        <button class="btn btn-secondary btn-sm mt-2 w-100" type="button" disabled>Out of Stock</button>
+                        {% endif %}
                     </div>
                 </div>
             </div>

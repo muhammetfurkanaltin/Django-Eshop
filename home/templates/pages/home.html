@@ -7,6 +7,16 @@
 {% block content %}
     <!-- Slider -->
     <div id="carouselExampleAutoplaying" class="container carousel slide mt-3" data-bs-ride="carousel">
+            <!-- Mesajlar -->
+    {% if messages %}
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {% for message in messages %}
+                <p class="mb-0">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
         <div class="carousel-inner rounded-5">
             <div class="carousel-item active">
                 <img src="{% static 'images/ceket1.jpg' %}" class="d-block w-100" alt="First Slide" style="height: 400px; object-fit: cover;">
@@ -41,7 +51,7 @@
     </div>
 
 <main>
-    <div class="container mt-3">
+    <div class="container mt-3 mb-5">
         <!-- Başlık -->
         <div class="mb-4">
             <h1 class="text-center fw-bold display-4">Favorites Jacket</h1>
@@ -69,13 +79,14 @@
                         <div class="mt-auto">
                             {% if product.isStock %}
                             <span class="badge bg-success">In Stock</span>
-                            {% else %}
-                            <span class="badge bg-danger">Out of Stock</span>
-                            {% endif %}
                             <form action="{% url 'add_to_cart' product.id %}" method="post">
                                 {% csrf_token %}
-                                <button class=" btn btn-primary btn-sm mt-2 w-100 " type="submit"> Add to Cart </button>
+                                <button class="btn btn-primary btn-sm mt-2 w-100" type="submit">Add to Cart</button>
                             </form>
+                            {% else %}
+                            <span class="badge bg-danger">Out of Stock</span>
+                            <button class="btn btn-secondary btn-sm mt-2 w-100" type="button" disabled>Out of Stock</button>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

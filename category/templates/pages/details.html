@@ -7,6 +7,16 @@
 
 {% block content %}
 <div class="container mt-3">
+        <!-- Mesajlar -->
+    {% if messages %}
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {% for message in messages %}
+                <p class="mb-0">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div class="row">
         <!-- Küçük Resimler -->
         <div class="col-1 mb-3">
@@ -62,15 +72,18 @@
                         </select>
                     </div>
         
-                    <!-- Add to Cart ve Buy Now Butonları -->
                     <div class="mt-4">
+                        {% if product.isStock %}
+                       
                         <form action="{% url 'add_to_cart' product.id %}" method="post">
                             {% csrf_token %}
                             <button class="btn btn-primary w-100 rounded-pill "type="submit">Add to Cart</button>
+                            <button class="btn btn-success w-100 rounded-pill mt-2" >BUY IT NOW</button>
                         </form>
-                    </div>
-                    <div class="mt-2">
-                        <button class="btn btn-success w-100 rounded-pill">BUY IT NOW</button>
+                        {% else %}
+                        <button class="btn btn-primary w-100 rounded-pill" disabled>Add to cart</button>
+                        <button class="btn btn-success w-100 rounded-pill mt-2" disabled>BUY IT NOW</button>
+                        {% endif %}
                     </div>
                 </div>
             </div>

@@ -29,13 +29,14 @@ def add_to_cart(request, product_id):
         cart[str(product_id)]['quantity'] += 1
     else:
         # Ürün bilgilerini sepete eklerken price ve quantity'yi de eklediğimize emin olalım
-        cart[str(product_id)] = {'title': product.title, 'price': product_price, 'quantity': 1 , 'imagUrl' : product.imagUrl }
-
+        cart[str(product_id)] = {'title': product.title, 'price': product_price, 'quantity': 1, 'imagUrl': 'static/images/' + product.imagUrl}
+    
     # Sepeti session'a kaydet
     request.session['cart'] = cart
-
+    messages.success(request, f"{product.title} başarıyla sepete eklendi!")
     # Sepet sayfasına yönlendir
-    return redirect('cart')  # Sepet sayfanıza yönlendirin.
+    referer = request.META.get('HTTP_REFERER', '/')
+    return redirect(referer)
 
 def clear_cart(request):
     # Remove specific session keys
