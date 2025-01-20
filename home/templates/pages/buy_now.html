@@ -1,23 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buy Now</title>
-</head>
-<body>
-    <h1>Buy Now</h1>
-    <p>Total Price: ${{ total_price }}</p>
+{% extends "layout.html" %}
 
-    <form method="POST" action="/payment-process/">
-        {% csrf_token %}
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br>
+{% block page_title %}
+    Buy Now
+{% endblock page_title %}
 
-        <label for="address">Address:</label>
-        <textarea id="address" name="address" required></textarea><br>
+{% block content %}
+    <div class="container mt-3 mb-5">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>Buy Now</h1>
+                <form id="buy-now-form" action="{% url 'buy_now' %}" method="POST" novalidate>
+                    {% csrf_token %}
+                
+                    {% for field in form %}
+                    <div class="mb-3 {% if field.errors %} invalid {% endif %}">
+                        {% if field.errors %}
+                        <div class="alert alert-danger">
+                            {% for error in field.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}  
+                </form>
+            </div>
 
-        <button type="submit" class="btn btn-primary">Proceed to Payment</button>
-    </form>
-</body>
-</html>
+            <div class="col-md-4 mt-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Cart Summary</h5>
+                        <p class="h5 text-primary">Total: ${{ total_price }}</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="{% url 'cart' %}" class="btn btn-warning">Back to Cart</a>
+                        <button type="submit" form="buy-now-form" class="btn btn-primary">Complete Order</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

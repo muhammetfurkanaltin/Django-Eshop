@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from category.models import Category, Product
-from django.http import JsonResponse
-
-
+from django.db.models import Sum
+from category.models import Product
+from .forms import OrderForm
 
 def home (request):
     products = Product.objects.filter(isFav=True)[:4]
@@ -16,11 +15,34 @@ def contact (request):
     return render (request,'pages/contact.html')
 
 def buy_now(request):
-    if request.method == 'POST':
-        total_price = request.POST.get('total_price', 0)  # total_price bilgisini al
-        return render(request, 'pages/buy_now.html', {'total_price': total_price})
-    return render(request, 'pages/buy_now.html')
-    
+    if request.method == "POST":
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.save()
+            
+            # Session'dan sepet bilgilerini al
+            cart = request.session.get('cart', {})
+            total_price = sum(item['price'] * item['quantity'] for item in cart.values())
+            
+            # Siparişe ürünleri ekle
+            for product_id, item in cart.items():
+                product = Product.objects.get(id=int(product_id))
+                order.products.add(product, through_defaults={'quantity': item['quantity']})
+            
+            # Sepeti temizle
+            if 'cart' in request.session:
+                del request.session['cart']
+            request.session.modified = True
+            
+            messages.success(request, "Siparişiniz başarıyla oluşturuldu!")
+            return redirect("home")
+    else:
+        form = OrderForm()
+
+    cart = request.session.get('cart', {})
+    total_price = sum(item['price'] * item['quantity'] for item in cart.values())
+    return render(request, "pages/buy_now.html", {"form": form, "total_price": total_price})
 
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -35,7 +57,7 @@ def add_to_cart(request, product_id):
         cart[str(product_id)]['quantity'] += 1
     else:
         # Ürün bilgilerini sepete eklerken price ve quantity'yi de eklediğimize emin olalım
-        cart[str(product_id)] = {'title': product.title, 'price': product_price, 'quantity': 1, 'imagUrl': 'static/images/' + product.imagUrl}
+        cart[str(product_id)] = {'title': product.title, 'price': product_price, 'quantity': 1, 'imagUrl': product.imagUrl}
     
     # Sepeti session'a kaydet
     request.session['cart'] = cart
@@ -56,8 +78,6 @@ def view_cart(request):
     cart = request.session.get('cart', {})
     total_price = sum(item['price'] * item['quantity'] for item in cart.values())  # Toplam fiyat hesaplama
     return render(request, 'pages/cart.html', {'cart': cart, 'total_price': total_price})
-
-
 
 def update_quantity(request, product_id):
     if request.method == 'POST':

@@ -14,8 +14,8 @@
                     {% for product_id, item in cart.items %}
                         <li class="list-group-item d-flex justify-content-between align-items-center mb-3 shadow-sm p-3">
                             <!-- Ürün Görseli -->
-                            <div class="d-flex align-items-center">
-                                <img src="{% static item.imagUrl %}" alt="{{ item.title }}" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover;">
+                            <div class="d-flex align-items-center">       
+                                <img src="{% static 'images/'|add:item.imagUrl %}" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover;">
                             </div>
                             <div class="ms-3 d-flex flex-column justify-content-center">
                                 <!-- Ürün Adı ve Fiyatı -->
@@ -47,7 +47,7 @@
                         <a href="{% url 'clear_cart' %}" class="btn btn-warning btn-block">Clear Cart</a>
                         
                         <!-- Buy it now form -->
-                        <form method="POST" action="{% url 'buy_now' %}" class="w-100">
+                        <form method="POST" action="{% url 'buy_now' %}">
                             {% csrf_token %}
                             <input type="hidden" name="total_price" value="{{ total_price }}">
                             <button type="submit" class="btn btn-success btn-block">Buy it now</button>
