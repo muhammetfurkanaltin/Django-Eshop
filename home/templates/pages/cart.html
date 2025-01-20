@@ -45,10 +45,17 @@
                     </div>
                     <div class="card-footer d-flex justify-content-between">
                         <a href="{% url 'clear_cart' %}" class="btn btn-warning btn-block">Clear Cart</a>
-                        <a href="#" class="btn btn-success btn-block">Buy it now</a>
+                        
+                        <!-- Buy it now form -->
+                        <form method="POST" action="{% url 'buy_now' %}" class="w-100">
+                            {% csrf_token %}
+                            <input type="hidden" name="total_price" value="{{ total_price }}">
+                            <button type="submit" class="btn btn-success btn-block">Buy it now</button>
+                        </form>
                     </div>
                 </div>
             </div>
+            
         </div>
     {% else %}
         <p class="text-center">Your cart is empty.</p>

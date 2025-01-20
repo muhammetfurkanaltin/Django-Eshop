@@ -55,37 +55,63 @@
         <!-- Başlık -->
         <div class="mb-4">
             <h1 class="text-center fw-bold display-4">Favorites Jacket</h1>
-            <p class="text-center text-muted">Take a look at our most popular jackets!</p>
+        
+            <!-- Kayan Yazı -->
+            <div id="announcementCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="alert alert-info text-center mb-0" role="alert">
+                            <strong>Discover our favorite jackets!</strong> Don't miss the 50% discount opportunity!
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        
     
-        <!-- Ürün Kartları -->
-        <div class="row g-4">
+        <div class="row g-4 mb-5">
             {% for product in products %}
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card shadow-sm h-100 border-0">
-                    <!-- Görsel -->
-                    <img src="{% static 'images/'|add:product.imagUrl %}" 
-                         class="card-img-top rounded-top" 
-                         alt="{{ product.title }}" 
-                         style="height: 300px; object-fit: cover;">
+                <div class="card shadow-sm h-100 border-0 rounded-lg">
+                    <!-- Ürün Görseli -->
+                    <div class="position-relative overflow-hidden rounded-top">
+                        <img src="{% static 'images/'|add:product.imagUrl %}" 
+                             class="card-img-top" 
+                             alt="{{ product.title }}" 
+                             style="height: 300px; object-fit: cover; transition: transform 0.3s;">
+                        {% if not product.isStock %}
+                        <!-- Stok Durumu Overlay -->
+                        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-75">
+                            <span class="badge bg-danger text-white fs-6 py-2 px-3">Out of Stock</span>
+                        </div>
+                        {% endif %}
+                    </div>
                     
                     <!-- Kart İçeriği -->
-                    <div class="card-body d-flex flex-column text-center">
-                        <h5 class="card-title text-truncate"><a href="{%url 'details' product.slug%}">{{ product.title }}</a></h5>
-                            <p class="card-text text-muted small mb-2">{{ product.description|truncatechars:25 }}</p>
-                            <p class="text-muted small">{{ product.created_at|date:'d M Y' }}</p>
+                    <div class="card-body d-flex flex-column text-center p-3">
+                        <!-- Başlık -->
+                        <h5 class="card-title text-truncate">
+                            <a href="{% url 'details' product.slug %}" class="text-decoration-none text-dark fw-bold">{{ product.title }}</a>
+                        </h5>
                         
-                        <!-- Stok Durumu ve Buton -->
+                        <!-- Açıklama ve Tarih -->
+                        <p class="card-text text-muted small mb-2">{{ product.description|truncatechars:40 }}</p>
+                        <p class="text-muted small">{{ product.created_at|date:'d M Y' }}</p>
+                        
+                        <!-- Fiyat ve İşlemler -->
                         <div class="mt-auto">
+                            <span class="badge bg-primary fs-6 mb-2">{{ product.price }} $</span>
                             {% if product.isStock %}
-                            <span class="badge bg-success">In Stock</span>
-                            <form action="{% url 'add_to_cart' product.id %}" method="post">
+                            <form action="{% url 'add_to_cart' product.id %}" method="post" class="mt-2">
                                 {% csrf_token %}
-                                <button class="btn btn-primary btn-sm mt-2 w-100" type="submit">Add to Cart</button>
+                                <button class="btn btn-outline-primary btn-sm w-100" type="submit">
+                                    <i class="bi bi-cart-plus"></i> Add to Cart
+                                </button>
                             </form>
                             {% else %}
-                            <span class="badge bg-danger">Out of Stock</span>
-                            <button class="btn btn-secondary btn-sm mt-2 w-100" type="button" disabled>Out of Stock</button>
+                            <button class="btn btn-secondary btn-sm mt-2 w-100" type="button" disabled>
+                                <i class="bi bi-x-circle"></i> Out of Stock
+                            </button>
                             {% endif %}
                         </div>
                     </div>
@@ -93,8 +119,8 @@
             </div>
             {% endfor %}
         </div>
-    </div>
-</main>
-{% endblock %}
-
+        
+            </div>
+        </main>
+        {% endblock %}
 

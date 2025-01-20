@@ -6,14 +6,20 @@ from django.http import JsonResponse
 
 
 def home (request):
-    products = Product.objects.filter(isFav=True)
-    return render (request,'pages/home.html',{'products':products})
+    products = Product.objects.filter(isFav=True)[:4]
+    return render (request,'pages/home.html',{'products':products[:4]})
  
 def about (request):
     return render (request,'pages/about.html')
 
 def contact (request):
     return render (request,'pages/contact.html')
+
+def buy_now(request):
+    if request.method == 'POST':
+        total_price = request.POST.get('total_price', 0)  # total_price bilgisini al
+        return render(request, 'pages/buy_now.html', {'total_price': total_price})
+    return render(request, 'pages/buy_now.html')
     
 
 def add_to_cart(request, product_id):
@@ -50,6 +56,8 @@ def view_cart(request):
     cart = request.session.get('cart', {})
     total_price = sum(item['price'] * item['quantity'] for item in cart.values())  # Toplam fiyat hesaplama
     return render(request, 'pages/cart.html', {'cart': cart, 'total_price': total_price})
+
+
 
 def update_quantity(request, product_id):
     if request.method == 'POST':

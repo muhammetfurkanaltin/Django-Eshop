@@ -7,19 +7,23 @@
 {% block content %}
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
         <div class="text-center">
-            <h3 class="mb-4">Get in Touch</h3>
-            <p>
+            <h3 class="mb-4 text-primary">Get in Touch</h3>
+            <p class="lead">
                 We'd love to hear from you! Whether you have a question, feedback, or just want to say hello, feel free to reach out.
                 <br>
                 Our team is always ready to assist you.
             </p>
-            <h4 class="mt-4">Contact Information</h4>
-            <p>
-                Email: info@example.com<br>
-                Phone: +1-123-456-7890<br>
-                Address: 123 Main Street, Anytown, USA
-                <i class="fa-regular fa-user"></i>
+
+            <!-- Contact Information Section -->
+            <h4 class="mt-4 text-success">Contact Information</h4>
+            <p class="text-muted">
+                <strong>Email:</strong> <a href="mailto:info@example.com" class="text-decoration-none">info@example.com</a><br>
+                <strong>Phone:</strong> <a href="tel:+11234567890" class="text-decoration-none">+1-123-456-7890</a><br>
+                <strong>Address:</strong> 123 Main Street, Anytown, USA
             </p>
+
+            <!-- Optional Contact Icon -->
+            <i class="fas fa-envelope-open-text fa-3x mt-3 text-primary"></i>
         </div>
     </div>
 {% endblock %}
