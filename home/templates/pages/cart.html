@@ -47,11 +47,21 @@
                         <a href="{% url 'clear_cart' %}" class="btn btn-warning btn-block">Clear Cart</a>
                         
                         <!-- Buy it now form -->
-                        <form method="POST" action="{% url 'buy_now' %}">
+                        {% if user.is_authenticated %}
+
+                            <form method="GET" action="{% url 'buy_now' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="total_price" value="{{ total_price }}">
+                                <button type="submit" class="btn btn-success btn-block" >Buy it now</button>
+                            </form>
+                        {% else %}
+                            <form method="GET" action="{% url 'user_login' %}">
                             {% csrf_token %}
                             <input type="hidden" name="total_price" value="{{ total_price }}">
-                            <button type="submit" class="btn btn-success btn-block">Buy it now</button>
-                        </form>
+                            <button type="submit" class="btn btn-success btn-block" >Login</button>
+                            </form>
+                        {%endif%}
+
                     </div>
                 </div>
             </div>
@@ -61,4 +71,6 @@
         <p class="text-center">Your cart is empty.</p>
     {% endif %}
 </div>
+
+
 {% endblock %}

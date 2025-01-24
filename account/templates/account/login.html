@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% load static %}
+
+
+{% block page_title %}
+    Login
+{% endblock page_title %}
+
+{% block content %}
+        <div class="container mt-3 mb-5">
+        <div class="row">
+            <div class="col-12">
+                <h1>Login</h1>
+                <hr>
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% include 'partials/_form.html' %}
+
+                    
+                    <button type="submit" class="btn btn-primary">Login</button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock content %}

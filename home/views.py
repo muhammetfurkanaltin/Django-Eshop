@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.db.models import Sum
 from category.models import Product
-from .forms import OrderForm
+from home.forms import OrderForm
+
+
 
 def home (request):
     products = Product.objects.filter(isFav=True)[:4]
@@ -44,6 +45,8 @@ def buy_now(request):
     total_price = sum(item['price'] * item['quantity'] for item in cart.values())
     return render(request, "pages/buy_now.html", {"form": form, "total_price": total_price})
 
+
+
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     
@@ -78,6 +81,8 @@ def view_cart(request):
     cart = request.session.get('cart', {})
     total_price = sum(item['price'] * item['quantity'] for item in cart.values())  # Toplam fiyat hesaplama
     return render(request, 'pages/cart.html', {'cart': cart, 'total_price': total_price})
+
+
 
 def update_quantity(request, product_id):
     if request.method == 'POST':

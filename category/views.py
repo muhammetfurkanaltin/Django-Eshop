@@ -3,8 +3,8 @@ from .models import Category, Product
 
 def index(request):
     categories = Category.objects.all()
-    product = Product.objects.filter(isStock=True)
-    return render(request, 'pages/index.html', {'product': product, 'category': categories})
+    products = Product.objects.all()
+    return render(request, 'pages/index.html', {'products': products, 'category': categories})
 
 def details(request,slug):
     product = get_object_or_404(Product, slug=slug)
