@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+
 {% load static %}
 {% block page_title %}
     Cart
@@ -20,7 +21,7 @@
                             <div class="ms-3 d-flex flex-column justify-content-center">
                                 <!-- Ürün Adı ve Fiyatı -->
                                 <h5>{{ item.title }}</h5>
-                                <p class="mb-1 text-muted">Price: ${{ item.price }} each</p>
+                                <p class="mb-1 text-muted">Price: ${{ item.display_price }} each</p>
                             </div>
                             <div class="d-flex align-items-center">
                                 <!-- Sepet Miktarı ve Artırma/Azaltma Butonları -->

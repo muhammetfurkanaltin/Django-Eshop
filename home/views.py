@@ -1,8 +1,13 @@
+from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from category.models import Product
 from home.forms import OrderForm
+import stripe # type: ignore
+from django.conf import settings
+from django.shortcuts import redirect
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def home (request):
@@ -43,9 +48,8 @@ def buy_now(request):
 
     cart = request.session.get('cart', {})
     total_price = sum(item['price'] * item['quantity'] for item in cart.values())
-    return render(request, "pages/buy_now.html", {"form": form, "total_price": total_price})
-
-
+    display_total_price = f"{total_price / 100:.2f}"
+    return render(request, "pages/buy_now.html", {"form": form, "total_price": display_total_price})
 
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -79,9 +83,11 @@ def clear_cart(request):
 
 def view_cart(request):
     cart = request.session.get('cart', {})
-    total_price = sum(item['price'] * item['quantity'] for item in cart.values())  # Toplam fiyat hesaplama
-    return render(request, 'pages/cart.html', {'cart': cart, 'total_price': total_price})
-
+    for item in cart.values():
+        item['display_price'] = f"{item['price'] / 100:.2f}"  # Fiyatı dolar formatına çevir
+    total_price = sum(item['price'] * item['quantity'] for item in cart.values())
+    display_total_price = f"{total_price / 100:.2f}"
+    return render(request, 'pages/cart.html', {'cart': cart, 'total_price': display_total_price})
 
 
 def update_quantity(request, product_id):
@@ -103,5 +109,44 @@ def update_quantity(request, product_id):
     return redirect('cart')
 
 
+def create_checkout_session(request):
+    YOUR_DOMAIN = 'http://localhost:8000'
+
+    cart = request.session.get('cart', {})
+    if not cart:
+        messages.error(request, "Sepetiniz boş.")
+        return redirect('cart')
+    
+    line_items = []
+    for product_id, item in cart.items():
+        line_items.append({
+            'price_data': {
+                'currency': 'usd',
+                'product_data': {
+                    'name': item['title'],
+                },
+                'unit_amount': int(float(item['price'])),  # Fiyatı cent cinsine çevir
+            },
+            'quantity': item['quantity'],
+        })
+
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=line_items,
+            mode='payment',
+            success_url=f'{YOUR_DOMAIN}/success/',
+            cancel_url=f'{YOUR_DOMAIN}/cancel/',
+        )
+        # Kullanıcıyı Stripe'ın ödeme sayfasına yönlendir
+        return redirect(checkout_session.url)
+    except Exception as e:
+        messages.error(request, f"Ödeme işlemi sırasında bir hata oluştu: {str(e)}")
+        return redirect('cart')
+
+def success (request):
+    return render (request,'pages/success.html')
+def cancel (request):
+    return render (request,'pages/cancel.html')
 
 

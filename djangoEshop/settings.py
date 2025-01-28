@@ -1,8 +1,7 @@
 import os
 from pathlib import Path
 from django.contrib.messages import constants as messages
-from dotenv import load_dotenv
-
+from dotenv import load_dotenv  # type: ignore
 # Load environment variables from .env file
 load_dotenv()
 
@@ -14,13 +13,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-your-secret-key-here')
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False') == 'True'  # DEBUG'ü False değil True olarak kontrol etmelisiniz
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1')
 
-# Eğer DEBUG False ise ALLOWED_HOSTS mutlaka belirtilmeli
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 
 # Application definition
@@ -29,6 +27,7 @@ INSTALLED_APPS = [
     'account',
     'home',
     'category',
+     
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -138,3 +137,8 @@ MESSAGE_TAGS = {
     messages.ERROR: "alert-danger",
     
  }
+
+STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
+SITE_URL = os.getenv('SITE_URL', 'http://localhost:8000')

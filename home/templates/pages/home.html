@@ -100,7 +100,7 @@
                         
                         <!-- Fiyat ve İşlemler -->
                         <div class="mt-auto">
-                            <span class="badge bg-primary fs-6 mb-2">{{ product.price }} $</span>
+                            <span class="badge bg-primary fs-6 mb-2">{{ product.get_display_price }} $</span>
                             {% if product.isStock %}
                             <form action="{% url 'add_to_cart' product.id %}" method="post" class="mt-2">
                                 {% csrf_token %}

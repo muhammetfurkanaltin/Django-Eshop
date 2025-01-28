@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-md-8">
                 <h1>Buy Now</h1>
-                <form id="buy-now-form" action="{% url 'buy_now' %}" method="POST" novalidate>
+                <form id="buy-now-form" action="{% url 'create_checkout_session' %}" method="POST" novalidate>
                     {% csrf_token %}
                 
                     {% for field in form %}
@@ -34,13 +34,13 @@
                         <h5 class="card-title">Cart Summary</h5>
                         <p class="h5 text-primary">Total: ${{ total_price }}</p>
                     </div>
+                        
                     <div class="card-footer d-flex justify-content-between">
                         <a href="{% url 'cart' %}" class="btn btn-warning">Back to Cart</a>
                         <button type="submit" form="buy-now-form" class="btn btn-primary">Complete Order</button>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 {% endblock %}
