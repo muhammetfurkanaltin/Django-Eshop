@@ -171,6 +171,6 @@ def cancel(request):
         del request.session["temp_order"]
     request.session.modified = True
     messages.info(request, "Ödeme iptal edildi.")
-    return redirect("cart")
+    return redirect("home")
 
 
