@@ -11,7 +11,6 @@ urlpatterns = [
     path('update_quantity/<int:product_id>/', views.update_quantity, name='update_quantity'), # "- +"
     path('buy-now/', views.buy_now, name='buy_now'),
     
-    path('create-checkout-session/', views.create_checkout_session, name='create_checkout_session'),
     path('success/', views.success, name='success'),  # Success view ekleyin
     path('cancel/', views.cancel, name='cancel'),  # Cancel view ekleyin
     

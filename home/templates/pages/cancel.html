@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Checkout canceled</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <section>
-    <p>Forgot to add something to your cart? Shop around then come back to pay!</p>
-  </section>
-</body>
-</html>
+{% extends "layout.html" %}
+{% block page_title %}
+    Checkout canceled
+{% endblock page_title %}
+{% block content %}
+<div class="container">
+  <div class="alert alert-warning text-center mt-3 " role="alert">
+    <p>Your checkout has been canceled. Please contact us if you need further assistance.</p>
+    <a href="/" class="btn btn-secondary">Return to Home</a>
+  </div>
+</div>
+{% endblock %}

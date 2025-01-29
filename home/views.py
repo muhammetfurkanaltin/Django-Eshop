@@ -1,4 +1,3 @@
-from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from category.models import Product
@@ -24,32 +23,60 @@ def buy_now(request):
     if request.method == "POST":
         form = OrderForm(request.POST)
         if form.is_valid():
-            order = form.save(commit=False)
-            order.save()
+            # Form verilerini oturuma kaydet (henüz veritabanına kaydetme)
+            request.session["temp_order"] = {
+                "cleaned_data": form.cleaned_data,
+                "cart": request.session.get("cart", {}),
+            }
             
-            # Session'dan sepet bilgilerini al
-            cart = request.session.get('cart', {})
-            total_price = sum(item['price'] * item['quantity'] for item in cart.values())
+            # Stripe Checkout Session oluştur
+            YOUR_DOMAIN = "http://localhost:8000"
+            cart = request.session["temp_order"]["cart"]
+            line_items = []
             
-            # Siparişe ürünleri ekle
             for product_id, item in cart.items():
-                product = Product.objects.get(id=int(product_id))
-                order.products.add(product, through_defaults={'quantity': item['quantity']})
+                line_items.append({
+                    "price_data": {
+                        "currency": "usd",
+                        "product_data": {"name": item["title"]},
+                        "unit_amount": int(float(item["price"])),
+                    },
+                    "quantity": item["quantity"],
+                })
             
-            # Sepeti temizle
-            if 'cart' in request.session:
-                del request.session['cart']
-            request.session.modified = True
-            
-            messages.success(request, "Siparişiniz başarıyla oluşturuldu!")
-            return redirect("home")
+            try:
+                checkout_session = stripe.checkout.Session.create(
+                    payment_method_types=["card"],
+                    line_items=line_items,
+                    mode="payment",
+                    success_url=f"{YOUR_DOMAIN}/success/",
+                    cancel_url=f"{YOUR_DOMAIN}/cancel/",
+                )
+                return redirect(checkout_session.url)
+            except Exception as e:
+                messages.error(request, f"Ödeme hatası: {str(e)}")
+                return redirect("cart")
+        else:
+            # Form geçersizse hataları göster
+            cart = request.session.get("cart", {})
+            total_price = sum(item["price"] * item["quantity"] for item in cart.values())
+            display_total_price = f"{total_price / 100:.2f}"
+            return render(
+                request,
+                "pages/buy_now.html",
+                {"form": form, "total_price": display_total_price},
+            )
     else:
         form = OrderForm()
-
-    cart = request.session.get('cart', {})
-    total_price = sum(item['price'] * item['quantity'] for item in cart.values())
+    
+    cart = request.session.get("cart", {})
+    total_price = sum(item["price"] * item["quantity"] for item in cart.values())
     display_total_price = f"{total_price / 100:.2f}"
-    return render(request, "pages/buy_now.html", {"form": form, "total_price": display_total_price})
+    return render(
+        request,
+        "pages/buy_now.html",
+        {"form": form, "total_price": display_total_price},
+    )
 
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -89,7 +116,6 @@ def view_cart(request):
     display_total_price = f"{total_price / 100:.2f}"
     return render(request, 'pages/cart.html', {'cart': cart, 'total_price': display_total_price})
 
-
 def update_quantity(request, product_id):
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -108,45 +134,43 @@ def update_quantity(request, product_id):
 
     return redirect('cart')
 
-
-def create_checkout_session(request):
-    YOUR_DOMAIN = 'http://localhost:8000'
-
-    cart = request.session.get('cart', {})
-    if not cart:
-        messages.error(request, "Sepetiniz boş.")
-        return redirect('cart')
+def success(request):
+    # Oturumdaki geçici sipariş verilerini al
+    temp_order = request.session.get("temp_order", None)
     
-    line_items = []
-    for product_id, item in cart.items():
-        line_items.append({
-            'price_data': {
-                'currency': 'usd',
-                'product_data': {
-                    'name': item['title'],
-                },
-                'unit_amount': int(float(item['price'])),  # Fiyatı cent cinsine çevir
-            },
-            'quantity': item['quantity'],
-        })
-
-    try:
-        checkout_session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
-            line_items=line_items,
-            mode='payment',
-            success_url=f'{YOUR_DOMAIN}/success/',
-            cancel_url=f'{YOUR_DOMAIN}/cancel/',
-        )
-        # Kullanıcıyı Stripe'ın ödeme sayfasına yönlendir
-        return redirect(checkout_session.url)
-    except Exception as e:
-        messages.error(request, f"Ödeme işlemi sırasında bir hata oluştu: {str(e)}")
-        return redirect('cart')
-
-def success (request):
-    return render (request,'pages/success.html')
-def cancel (request):
-    return render (request,'pages/cancel.html')
+    if not temp_order:
+        messages.error(request, "Geçersiz sipariş.")
+        return redirect("cart")
+    
+    # Siparişi oluştur ve kaydet
+    form = OrderForm(temp_order["cleaned_data"])
+    if form.is_valid():
+        order = form.save()  # Veritabanına kaydet
+        
+        # Ürünleri siparişe ekle
+        cart = temp_order["cart"]
+        for product_id, item in cart.items():
+            product = Product.objects.get(id=int(product_id))
+            order.products.add(product, through_defaults={"quantity": item["quantity"]})
+        
+        # Oturumu temizle
+        del request.session["temp_order"]
+        if "cart" in request.session:
+            del request.session["cart"]
+        request.session.modified = True
+        
+        messages.success(request, "Siparişiniz ve ödemeniz başarıyla tamamlandı!")
+        return redirect("home")
+    else:
+        messages.error(request, "Sipariş oluşturulamadı.")
+        return redirect("cart")
+    
+def cancel(request):
+    # Geçici verileri temizle
+    if "temp_order" in request.session:
+        del request.session["temp_order"]
+    request.session.modified = True
+    messages.info(request, "Ödeme iptal edildi.")
+    return redirect("cart")
 
 
